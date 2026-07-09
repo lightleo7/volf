@@ -1,4 +1,5 @@
 use std::process::Command;
+mod mpv_ipc;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -23,8 +24,13 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
-        .invoke_handler(tauri::generate_handler![launch_mpv])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            launch_mpv,
+            mpv_ipc::start_mpv_monitor,
+            mpv_ipc::set_mpv_pause,
+            mpv_ipc::set_mpv_time
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

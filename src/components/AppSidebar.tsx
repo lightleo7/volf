@@ -21,7 +21,7 @@ export function AppSidebar({ currentTab, onTabChange }: AppSidebarProps) {
     { id: "search" as ActiveTab, title: "Поиск", icon: Search },
     { id: "history" as ActiveTab, title: "История", icon: History },
     { id: "settings" as ActiveTab, title: "Настройки", icon: Settings },
-    // { id: "dualMode" as ActiveTab, title: "Совместный просмотр", icon: Video },
+    { id: "dualMode" as ActiveTab, title: "Совместный просмотр", icon: Video },
   ];
 
   return (
