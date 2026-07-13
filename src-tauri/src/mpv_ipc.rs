@@ -1,5 +1,5 @@
 use tauri::Emitter;
-use std::io::{Read, Write};
+use std::io::{BufRead, BufReader, Read, Write};
 #[cfg(unix)]
 use std::os::unix::net::UnixStream;
 #[cfg(windows)]
@@ -54,12 +54,10 @@ fn query_mpv(socket_path: &str, command: serde_json::Value) -> Result<String, St
         stream.set_read_timeout(Some(Duration::from_millis(250))).map_err(|e| e.to_string())?;
         stream.write_all(payload.as_bytes()).map_err(|e| e.to_string())?;
 
+        let mut reader = BufReader::new(stream);
         let mut response = String::new();
-        
-        let mut buffer = [0; 4096];
-        let bytes_read = stream.read(&mut buffer).map_err(|e| e.to_string())?;
-        let response = String::from_utf8_lossy(&buffer[..bytes_read]).into_owned();
-        
+        reader.read_line(&mut response).map_err(|e| e.to_string())?;
+       
         if response.is_empty() {
             return Err("Пустой ответ от сокета".to_string());
         }
@@ -68,18 +66,27 @@ fn query_mpv(socket_path: &str, command: serde_json::Value) -> Result<String, St
 
     #[cfg(windows)]
     {
-        let mut file = OpenOptions::new()
+        let file = OpenOptions::new()
             .read(true)
             .write(true)
             .open(socket_path)
             .map_err(|e| e.to_string())?;
-        file.write_all(payload.as_bytes()).map_err(|e| e.to_string())?;
+           
+        let mut writer = &file;
+        writer.write_all(payload.as_bytes()).map_err(|e| e.to_string())?;
+        writer.flush().map_err(|e| e.to_string())?;
 
+        let mut reader = BufReader::new(&file);
         let mut response = String::new();
-        file.read_to_string(&mut response).map_err(|e| e.to_string())?;
+        reader.read_line(&mut response).map_err(|e| e.to_string())?;
+
+        if response.is_empty() {
+            return Err("Пустой ответ от пайпа Windows".to_string());
+        }
         Ok(response)
     }
 }
+
 
 #[tauri::command]
 pub fn start_mpv_monitor(window: tauri::Window, socket_path: String) {

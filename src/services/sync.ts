@@ -52,7 +52,7 @@ class SyncService {
 
     joinRoom(roomCode: string): Promise<{ videoState: VideoState }> {
         return new Promise((resolve, reject) => {
-            if (!this.socket || !this.socket.connected) return reject("Нет активного подключения к серверу");
+            if (!this.socket || !this.socket.connected) return reject("Не удалось подключиться к серверу синхронизации(");
 
             this.socket.emit("join_room", { roomCode }, (response: { success: boolean; videoState: VideoState; error?: string }) => {
                 if (response.success) {
