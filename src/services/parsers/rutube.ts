@@ -79,9 +79,7 @@ export class RutubeParser extends BaseVideoParser {
         if (!itemId) continue;
 
         const contentType = item.content_type || "video";
-        console.log(item.content_type, contentType);
         const isPlaylist = contentType == "playlist";
-        console.log(isPlaylist);
         let videoUrl = "";
 
         if (isPlaylist) {
