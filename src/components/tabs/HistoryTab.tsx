@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { VideoItem } from "@/types";
 import { Card } from "@/components/ui/card";
 import { getHistory } from "@/utils/config";
-import { Share2 } from "lucide-react";
+import { Share2, Play, History } from "lucide-react";
 
 interface HistoryTabProps {
   onPlay: (video: VideoItem) => void;
@@ -21,68 +21,74 @@ export function HistoryTab({ onPlay, onShare }: HistoryTabProps) {
   }, []);
 
   return (
-    <div className="max-w-5xl w-full mx-auto">
-      <h1 className="text-2xl font-bold text-white mb-4">История просмотров</h1>
+    <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+          <History className="w-8 h-8 text-violet-400" /> ИСТОРИЯ ПРОСМОТРОВ
+        </h1>
+        <p className="text-slate-400 text-xs tracking-widest uppercase">Список ранее запущенных медиапотоков</p>
+      </div>
+
       {videosHistory.length > 0 ? (
-        <div className="flex flex-col gap-3 mt-2">
+        <div className="flex flex-col gap-4 mt-2">
           {videosHistory.map((video) => (
             <Card
               key={`${video.sourceIdentifier}-${video.id}-history`}
               onClick={() => onPlay(video)}
-              className="flex flex-row items-center bg-slate-950 border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer overflow-hidden group shadow-lg h-24 sm:h-28"
+              className="group relative flex flex-row items-center bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.05] hover:border-violet-500/40 transition-all duration-500 cursor-pointer overflow-hidden rounded-2xl shadow-xl hover:shadow-[0_0_25px_rgba(168,85,247,0.12)] h-28"
             >
-              <div className="relative aspect-video h-full flex-shrink-0 overflow-hidden bg-slate-900">
+              <div className="relative aspect-video h-full flex-shrink-0 overflow-hidden bg-slate-950">
                 <img
-                  src={video.image || "https://unsplash.com"}
+                  src={video.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400"}
                   alt={video.title}
-                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                   loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
               </div>
 
-              <div className="flex flex-col justify-between h-full py-3 overflow-hidden flex-grow pl-4 pr-2">
+              <div className="flex flex-col justify-between h-full py-4 overflow-hidden flex-grow pl-5 pr-2">
                 <div className="overflow-hidden">
-                  <h3 className="text-sm font-medium text-slate-200 truncate group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-base font-semibold text-slate-200 truncate group-hover:text-violet-300 transition-colors duration-300">
                     {video.title}
                   </h3>
-                  <p className="text-xs text-slate-400 truncate mt-0.5">{video.author}</p>
+                  <p className="text-xs text-slate-400 font-medium truncate mt-1">{video.author}</p>
                 </div>
 
                 <div className="flex items-center gap-2 mt-auto">
-                  <span className="text-[10px] text-green-400 bg-green-950/20 border-green-900/50 font-medium px-2 py-0.5 rounded border uppercase tracking-wider">
+                  <span className="text-[10px] text-violet-400 bg-violet-950/30 border-violet-500/30 font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-widest">
                     {video.source}
                   </span>
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${video.isPlaylist
-                    ? "text-amber-400 bg-amber-950/20 border-amber-900/50"
-                    : "text-blue-400 bg-blue-950/20 border-blue-900/50"
-                    }`}>
+                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-widest ${
+                    video.isPlaylist ? "text-amber-400 bg-amber-950/30 border-amber-500/30" : "text-indigo-400 bg-indigo-950/30 border-indigo-500/30"
+                  }`}>
                     {video.isPlaylist ? "Плейлист" : "Видео"}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 pr-4 pl-2 flex-shrink-0">
+              <div className="flex items-center gap-3 pr-6 pl-2 flex-shrink-0 z-10">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onShare(video);
                   }}
-                  className="p-2 text-slate-500 hover:text-emerald-400 bg-slate-900/50 hover:bg-slate-900 border border-transparent hover:border-slate-800 rounded-lg transition-all"
+                  className="p-3 text-slate-400 hover:text-violet-400 bg-white/[0.02] hover:bg-violet-500/10 border border-white/[0.04] hover:border-violet-500/30 rounded-xl transition-all duration-300 shadow-md hover:shadow-[0_0_15px_rgba(168,85,247,0.2)]"
                   title="Поделиться в совместный просмотр"
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="w-5 h-5" />
                 </button>
-                <div className="text-slate-600 group-hover:text-emerald-500 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
-                  </svg>
+                <div className="p-3 rounded-full bg-white/[0.02] group-hover:bg-violet-500/20 border border-white/[0.04] group-hover:border-violet-500/40 text-slate-400 group-hover:text-violet-400 transition-all duration-300 shadow-md group-hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                  <Play className="w-5 h-5 fill-current" />
                 </div>
               </div>
             </Card>
           ))}
         </div>
       ) : (
-        <p className="text-slate-400 text-sm">Здесь будут отображаться запущенные ранее видео.</p>
+        <div className="text-center text-slate-500 mt-20 text-sm tracking-wide bg-white/[0.01] border border-white/[0.02] py-12 rounded-2xl">
+          Здесь будут отображаться запущенные ранее видео.
+        </div>
       )}
     </div>
   );

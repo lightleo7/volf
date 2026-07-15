@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RotateCcw, Save, Loader2 } from "lucide-react";
+import { RotateCcw, Save, Loader2, Settings } from "lucide-react";
 
 interface SettingsTabProps {
   mpvArgs: string;
@@ -27,18 +27,22 @@ export function SettingsTab({
   onReset
 }: SettingsTabProps) {
   return (
-    <div className="max-w-5xl w-full mx-auto flex flex-col gap-6">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Настройки плеера</h1>
-          <p className="text-slate-400 text-sm mt-1">Параметры запуска и конфигурация mpv.</p>
+    <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
+      {/* Шапка со стеклянной подложкой */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.06] pb-6 gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)]">
+            <Settings className="w-8 h-8 text-teal-400" /> НАСТРОЙКИ СИСТЕМЫ
+          </h1>
+          <p className="text-slate-400 text-xs tracking-widest uppercase">Конфигурация параметров MPV и парсеров</p>
         </div>
+        
         <div className="flex items-center gap-3">
           <Button
             onClick={onReset}
             disabled={isSaving}
             variant="outline"
-            className="border-slate-800 bg-transparent text-slate-300 hover:bg-slate-900 hover:text-white flex items-center gap-2 cursor-pointer h-10"
+            className="border-white/[0.08] bg-transparent text-slate-300 hover:bg-white/[0.03] hover:text-white flex items-center gap-2 cursor-pointer h-11 px-5 rounded-xl transition-all duration-300"
           >
             <RotateCcw className="w-4 h-4" />
             Сбросить
@@ -46,7 +50,7 @@ export function SettingsTab({
           <Button
             onClick={onSave}
             disabled={isSaving}
-            className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800 text-white font-medium flex items-center gap-2 cursor-pointer h-10 min-w-[120px]"
+            className="bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-400 hover:to-blue-500 disabled:from-teal-800 disabled:to-blue-900 text-white font-bold flex items-center gap-2 cursor-pointer h-11 px-6 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_30px_rgba(45,212,191,0.5)] active:scale-95"
           >
             {isSaving ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Сохранение...</>
@@ -57,10 +61,11 @@ export function SettingsTab({
         </div>
       </div>
 
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-slate-300">
-            Параметры запуска (аргументы командной строки)
+      <div className="flex flex-col gap-8 bg-white/[0.01] border border-white/[0.05] p-6 rounded-2xl backdrop-blur-md shadow-xl">
+        {/* Консольные аргументы запуска */}
+        <div className="flex flex-col gap-3">
+          <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
+            Аргументы командной строки MPV
           </label>
           <Input
             type="text"
@@ -68,33 +73,45 @@ export function SettingsTab({
             value={mpvArgs}
             onChange={(e) => setMpvArgs(e.target.value)}
             disabled={isSaving}
-            className="w-full bg-slate-950 border-slate-800 text-slate-100 placeholder:text-slate-600 focus-visible:ring-emerald-500 h-10 font-mono text-sm"
+            className="w-full bg-black/40 border-white/[0.06] text-teal-300 placeholder:text-slate-600 focus-visible:ring-teal-500 focus-visible:border-teal-500/50 h-11 font-mono text-sm rounded-xl px-4 transition-all duration-300"
           />
+          <p className="text-xs text-slate-500 leading-normal">
+            Продвинутые параметры воспроизведения локального плеера. Будут добавлены к каждому запуску.
+          </p>
         </div>
 
-        <div className="flex flex-col gap-4 mt-2">
-          <label className="text-sm font-medium text-slate-300">Поиск по площадкам</label>
-          <div className="flex items-center space-x-3">
-            <Checkbox
-              id="youtube-enabled"
-              checked={youtubeEnabled}
-              onCheckedChange={(checked) => setYoutubeEnabled(!!checked)}
-              disabled={isSaving}
-            />
-            <label htmlFor="youtube-enabled" className="text-sm font-medium text-slate-300 cursor-pointer">
-              YouTube
-            </label>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Checkbox
-              id="rutube-enabled"
-              checked={rutubeEnabled}
-              onCheckedChange={(checked) => setRutubeEnabled(!!checked)}
-              disabled={isSaving}
-            />
-            <label htmlFor="rutube-enabled" className="text-sm font-medium text-slate-300 cursor-pointer">
-              Rutube
-            </label>
+        {/* Чекбоксы с неоновым свечением при активации */}
+        <div className="flex flex-col gap-4 border-t border-white/[0.04] pt-6">
+          <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
+            Источники поиска контента
+          </label>
+          
+          <div className="flex flex-col gap-3 mt-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
+              <Checkbox
+                id="youtube-enabled"
+                checked={youtubeEnabled}
+                onCheckedChange={(checked) => setYoutubeEnabled(!!checked)}
+                disabled={isSaving}
+                className="border-white/[0.2] data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 data-[state=checked]:shadow-[0_0_12px_rgba(45,212,191,0.6)] h-5 w-5 rounded-md transition-all duration-300"
+              />
+              <label htmlFor="youtube-enabled" className="text-sm font-medium text-slate-200 cursor-pointer select-none">
+                YouTube
+              </label>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
+              <Checkbox
+                id="rutube-enabled"
+                checked={rutubeEnabled}
+                onCheckedChange={(checked) => setRutubeEnabled(!!checked)}
+                disabled={isSaving}
+                className="border-white/[0.2] data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 data-[state=checked]:shadow-[0_0_12px_rgba(45,212,191,0.6)] h-5 w-5 rounded-md transition-all duration-300"
+              />
+              <label htmlFor="rutube-enabled" className="text-sm font-medium text-slate-200 cursor-pointer select-none">
+                Rutube
+              </label>
+            </div>
           </div>
         </div>
       </div>
