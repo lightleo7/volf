@@ -55,7 +55,6 @@ export function DualModeTab({
       </div>
 
       <div className="flex flex-col gap-6">
-        {/* Сервер */}
         <div className="flex flex-col gap-3 bg-white/[0.01] border border-white/[0.04] p-5 rounded-2xl backdrop-blur-sm">
           <label className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2">
             <Server className="w-4 h-4 text-purple-400" /> Хостинг-Сервер синхронизации
@@ -73,9 +72,7 @@ export function DualModeTab({
         </div>
 
         {!currentRoom ? (
-          /* Две интерактивные карты с эффектом свечения */
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Создание комнаты */}
             <div className="group flex flex-col gap-4 p-6 bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] hover:border-purple-500/30 rounded-2xl justify-between transition-all duration-500 hover:shadow-[0_0_30px_rgba(168,85,247,0.1)]">
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-lg font-bold text-slate-100 group-hover:text-purple-300 transition-colors">Создать сессию просмотра</h3>
@@ -90,7 +87,6 @@ export function DualModeTab({
               </Button>
             </div>
 
-            {/* Подключение по коду */}
             <div className="group flex flex-col gap-4 p-6 bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] hover:border-pink-500/30 rounded-2xl justify-between transition-all duration-500 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)]">
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-lg font-bold text-slate-100 group-hover:text-pink-300 transition-colors">Присоединиться к другу</h3>
@@ -117,9 +113,7 @@ export function DualModeTab({
             </div>
           </div>
         ) : (
-          /* Интерфейс внутри комнаты */
           <div className="flex flex-col gap-6 w-full animate-fade-in">
-            {/* Огромная светящаяся карточка с кодом */}
             <div className="bg-gradient-to-r from-purple-950/20 via-black/40 to-indigo-950/20 border border-purple-500/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl backdrop-blur-md">
               <div className="text-left flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-[10px] font-extrabold text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 rounded-full px-3 py-1 w-fit select-none shadow-[0_0_15px_rgba(52,211,153,0.15)] animate-pulse">
@@ -138,7 +132,6 @@ export function DualModeTab({
               </div>
             </div>
 
-            {/* Контроль потока */}
             <div className="flex flex-col gap-4 bg-white/[0.01] border border-white/[0.05] rounded-2xl p-6 shadow-xl">
               <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
                 Транслировать медиапоток

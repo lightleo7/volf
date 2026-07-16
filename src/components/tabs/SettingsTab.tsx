@@ -28,7 +28,6 @@ export function SettingsTab({
 }: SettingsTabProps) {
   return (
     <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
-      {/* Шапка со стеклянной подложкой */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.06] pb-6 gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)]">
@@ -62,7 +61,6 @@ export function SettingsTab({
       </div>
 
       <div className="flex flex-col gap-8 bg-white/[0.01] border border-white/[0.05] p-6 rounded-2xl backdrop-blur-md shadow-xl">
-        {/* Консольные аргументы запуска */}
         <div className="flex flex-col gap-3">
           <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
             Аргументы командной строки MPV
@@ -80,14 +78,13 @@ export function SettingsTab({
           </p>
         </div>
 
-        {/* Чекбоксы с неоновым свечением при активации */}
         <div className="flex flex-col gap-4 border-t border-white/[0.04] pt-6">
           <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
             Источники поиска контента
           </label>
           
           <div className="flex flex-col gap-3 mt-2">
-            <div className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
+            <div className="flex items-center space-x-3 p-1 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
               <Checkbox
                 id="youtube-enabled"
                 checked={youtubeEnabled}
@@ -100,7 +97,7 @@ export function SettingsTab({
               </label>
             </div>
 
-            <div className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
+            <div className="flex items-center space-x-3 p-1 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
               <Checkbox
                 id="rutube-enabled"
                 checked={rutubeEnabled}

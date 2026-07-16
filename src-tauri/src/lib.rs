@@ -1,10 +1,4 @@
-use std::process::Command;
 mod mpv_ipc;
-
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
 #[tauri::command]
 fn launch_mpv(url: String, args: Vec<String>) -> Result<(), String> {
@@ -25,7 +19,6 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
             launch_mpv,
             mpv_ipc::start_mpv_monitor,
             mpv_ipc::set_mpv_pause,

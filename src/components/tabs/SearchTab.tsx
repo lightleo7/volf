@@ -35,7 +35,6 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
 
   return (
     <div className="flex flex-col gap-8 max-w-5xl w-full mx-auto animate-fade-in">
-      {/* Заголовок с легким свечением */}
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
           <Tv className="w-8 h-8 text-emerald-400 animate-pulse" /> ПОИСК ВИДЕО
@@ -43,7 +42,6 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
         <p className="text-slate-400 text-xs tracking-widest uppercase">Поток медиа-контента из облака</p>
       </div>
 
-      {/* Стеклянный поисковый бар с неоновым фокусом */}
       <div className="relative group flex items-center gap-3 p-2 rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl shadow-2xl transition-all duration-300 focus-within:border-emerald-500/50 focus-within:shadow-[0_0_30px_rgba(16,185,129,0.15)]">
         <Input
           type="text"
@@ -67,7 +65,6 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
         </Button>
       </div>
 
-      {/* Список результатов */}
       {videos.length > 0 ? (
         <div className="flex flex-col gap-4 mt-2">
           {videos.map((video) => (
@@ -76,7 +73,6 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
               onClick={() => onPlay(video)}
               className="group relative flex flex-row items-center bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.05] hover:border-emerald-500/40 transition-all duration-500 cursor-pointer overflow-hidden rounded-2xl shadow-xl hover:shadow-[0_0_25px_rgba(16,185,129,0.12)] h-28"
             >
-              {/* Превью */}
               <div className="relative aspect-video h-full flex-shrink-0 overflow-hidden bg-slate-950">
                 <img
                   src={video.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400"}
@@ -87,7 +83,6 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
               </div>
 
-              {/* Текстовая зона */}
               <div className="flex flex-col justify-between h-full py-4 overflow-hidden flex-grow pl-5 pr-2">
                 <div className="overflow-hidden">
                   <h3 className="text-base font-semibold text-slate-200 truncate group-hover:text-emerald-300 transition-colors duration-300">
@@ -110,7 +105,6 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
                 </div>
               </div>
 
-              {/* Управление */}
               <div className="flex items-center gap-3 pr-6 pl-2 flex-shrink-0 z-10">
                 <button
                   onClick={(e) => {

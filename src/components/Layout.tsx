@@ -12,10 +12,10 @@ interface LayoutProps {
 export function Layout({ currentTab, onTabChange, children }: LayoutProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex h-screen w-screen bg-slate-900 text-slate-100 antialiased overflow-hidden">
+      <div className="flex h-screen w-screen bg-slate-950 text-slate-100 antialiased overflow-hidden">
         <AppSidebar currentTab={currentTab} onTabChange={onTabChange} />
         
-        <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-slate-900">
+        <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-slate-950">
           {children}
         </main>
       </div>

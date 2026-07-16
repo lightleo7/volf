@@ -4,11 +4,9 @@ import { Layout } from "@/components/Layout";
 import { openInMpv } from "@/utils/player";
 import { addToHistory } from "@/utils/config";
 
-// Хуки рефактора
 import { useSettings } from "@/hooks/useSettings";
 import { useMpvSync } from "@/hooks/useMpvSync";
 
-// Компоненты вкладок с новым потрясающим glow-дизайном
 import { SearchTab } from "@/components/tabs/SearchTab";
 import { HistoryTab } from "@/components/tabs/HistoryTab";
 import { SettingsTab } from "@/components/tabs/SettingsTab";
@@ -17,7 +15,6 @@ import { DualModeTab } from "@/components/tabs/DualModeTab";
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("search");
 
-  // Управление настройками и синхронизацией
   const settings = useSettings();
   const sync = useMpvSync(settings.mpvArgs);
 

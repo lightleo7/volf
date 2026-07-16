@@ -1,5 +1,5 @@
 use tauri::Emitter;
-use std::io::{BufRead, BufReader, Read, Write};
+use std::io::{BufRead, BufReader, Write};
 #[cfg(unix)]
 use std::os::unix::net::UnixStream;
 #[cfg(windows)]

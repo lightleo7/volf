@@ -28,11 +28,10 @@ export function AppSidebar({ currentTab, onTabChange }: AppSidebarProps) {
     <Sidebar 
       variant="sidebar" 
       collapsible="none" 
-      className="border-r border-white/[0.04] bg-gradient-to-b from-[#0b0612]/95 to-[#120a18]/96 backdrop-blur-xl text-slate-200"
+      className="text-slate-200"
     >
       <SidebarContent>
         <SidebarGroup>
-          {/* Логотип приложения с неоновым свечением */}
           <div className="flex items-center gap-3 px-3 py-6 select-none">
             <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
               <Video className="w-5.5 h-5.5 text-white" />
@@ -57,14 +56,13 @@ export function AppSidebar({ currentTab, onTabChange }: AppSidebarProps) {
                       asChild
                       isActive={isActive}
                       onClick={() => onTabChange(item.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer border ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 h-11 cursor-pointer border ${
                         isActive 
                           ? "bg-gradient-to-r from-emerald-500/15 to-teal-600/5 text-emerald-300 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] font-semibold" 
                           : "text-slate-400 border-transparent hover:bg-white/[0.02] hover:text-slate-100 hover:border-white/[0.02]"
                       }`}
                     >
                       <div className="flex items-center gap-3 w-full">
-                        {/* Иконка с индивидуальным свечением при активности */}
                         <Icon className={`w-5 h-5 shrink-0 transition-transform duration-300 ${
                           isActive 
                             ? "text-emerald-400 scale-105 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" 
