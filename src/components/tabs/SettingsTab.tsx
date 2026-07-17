@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RotateCcw, Save, Loader2, Settings } from "lucide-react";
+import { MpvArgsCheckboxes } from "@/components/mpvArgs"; // Импортируем новый компонент
 
 interface SettingsTabProps {
   mpvArgs: string;
@@ -65,6 +66,7 @@ export function SettingsTab({
           <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
             Аргументы командной строки MPV
           </label>
+          
           <Input
             type="text"
             placeholder="Например, --fs --ontop --volume=50"
@@ -76,6 +78,17 @@ export function SettingsTab({
           <p className="text-xs text-slate-500 leading-normal">
             Продвинутые параметры воспроизведения локального плеера. Будут добавлены к каждому запуску.
           </p>
+
+          <div className="mt-4 border-t border-white/[0.04] pt-4">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-3">
+              Быстрые настройки
+            </span>
+            <MpvArgsCheckboxes 
+              mpvArgs={mpvArgs} 
+              setMpvArgs={setMpvArgs} 
+              disabled={isSaving} 
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-4 border-t border-white/[0.04] pt-6">
@@ -84,26 +97,28 @@ export function SettingsTab({
           </label>
           
           <div className="flex flex-col gap-3 mt-2">
-            <div className="flex items-center space-x-3 p-1 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
+            <div onClick={() => !isSaving && setYoutubeEnabled(!youtubeEnabled)} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
               <Checkbox
                 id="youtube-enabled"
                 checked={youtubeEnabled}
                 onCheckedChange={(checked) => setYoutubeEnabled(!!checked)}
                 disabled={isSaving}
-                className="border-white/[0.2] data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 data-[state=checked]:shadow-[0_0_12px_rgba(45,212,191,0.6)] h-5 w-5 rounded-md transition-all duration-300"
+                onClick={(e) => e.stopPropagation()} 
+                className="border-white/[0.2] data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 data-[state=checked]:shadow-[0_0_12px_rgba(45,212,191,0.6)] h-6 w-6 rounded-md transition-all duration-300"
               />
               <label htmlFor="youtube-enabled" className="text-sm font-medium text-slate-200 cursor-pointer select-none">
                 YouTube
               </label>
             </div>
 
-            <div className="flex items-center space-x-3 p-1 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
+            <div onClick={() => !isSaving && setRutubeEnabled(!rutubeEnabled)} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
               <Checkbox
                 id="rutube-enabled"
                 checked={rutubeEnabled}
                 onCheckedChange={(checked) => setRutubeEnabled(!!checked)}
                 disabled={isSaving}
-                className="border-white/[0.2] data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 data-[state=checked]:shadow-[0_0_12px_rgba(45,212,191,0.6)] h-5 w-5 rounded-md transition-all duration-300"
+                onClick={(e) => e.stopPropagation()} 
+                className="border-white/[0.2] data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500 data-[state=checked]:shadow-[0_0_12px_rgba(45,212,191,0.6)] h-6 w-6 rounded-md transition-all duration-300"
               />
               <label htmlFor="rutube-enabled" className="text-sm font-medium text-slate-200 cursor-pointer select-none">
                 Rutube
