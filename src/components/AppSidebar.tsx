@@ -58,7 +58,7 @@ export function AppSidebar({ currentTab, onTabChange }: AppSidebarProps) {
                       onClick={() => onTabChange(item.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 h-11 cursor-pointer border ${
                         isActive 
-                          ? "bg-gradient-to-r from-emerald-500/15 to-teal-600/5 text-emerald-300 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] font-semibold" 
+                          ? "bg-gradient-to-r from-emerald-500/15 to-teal-600/5 text-emerald-300 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]" 
                           : "text-slate-400 border-transparent hover:bg-white/[0.02] hover:text-slate-100 hover:border-white/[0.02]"
                       }`}
                     >
@@ -68,7 +68,7 @@ export function AppSidebar({ currentTab, onTabChange }: AppSidebarProps) {
                             ? "text-emerald-400 scale-105 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" 
                             : "group-hover:scale-105"
                         }`} />
-                        <span className="tracking-wide text-sm">{item.title}</span>
+                        <span className="tracking-wide text-sm uppercase font-semibold">{item.title}</span>
                       </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -125,8 +125,8 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
         </div>
       ) : (
         !isLoading && (
-          <div className="text-center text-slate-500 mt-20 text-sm tracking-wide bg-white/[0.01] border border-white/[0.02] py-12 rounded-2xl">
-            Введите поисковый запрос выше, чтобы запустить сканирование медиа-пространства.
+          <div className="text-center text-slate-500 text-sm tracking-wide bg-white/[0.01] border border-white/[0.02] py-12 rounded-2xl">
+            Введите поисковый запрос выше, чтобы запустить поиск по площадкам.
           </div>
         )
       )}

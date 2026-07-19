@@ -80,7 +80,7 @@ export function SettingsTab({
           </p>
 
           <div className="mt-4 border-t border-white/[0.04] pt-4">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-3">
+            <span className="text-sm font-semibold text-slate-300 uppercase tracking-wider block mb-3">
               Быстрые настройки
             </span>
             <MpvArgsCheckboxes 
@@ -96,7 +96,7 @@ export function SettingsTab({
             Источники поиска контента
           </label>
           
-          <div className="flex flex-col gap-3 mt-2">
+          <div className="flex flex-col gap-3">
             <div onClick={() => !isSaving && setYoutubeEnabled(!youtubeEnabled)} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.03] transition-all">
               <Checkbox
                 id="youtube-enabled"

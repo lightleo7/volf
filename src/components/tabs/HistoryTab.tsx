@@ -86,7 +86,7 @@ export function HistoryTab({ onPlay, onShare }: HistoryTabProps) {
           ))}
         </div>
       ) : (
-        <div className="text-center text-slate-500 mt-20 text-sm tracking-wide bg-white/[0.01] border border-white/[0.02] py-12 rounded-2xl">
+        <div className="text-center text-slate-500 text-sm tracking-wide bg-white/[0.01] border border-white/[0.02] py-12 rounded-2xl">
           Здесь будут отображаться запущенные ранее видео.
         </div>
       )}
