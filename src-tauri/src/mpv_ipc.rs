@@ -14,6 +14,7 @@ fn send_mpv_command(socket_path: &str, command: serde_json::Value) -> Result<(),
     {
         let mut stream = UnixStream::connect(socket_path).map_err(|e| e.to_string())?;
         stream.write_all(payload.as_bytes()).map_err(|e| e.to_string())?;
+        let _ = stream.flush();
     }
 
     #[cfg(windows)]
@@ -23,6 +24,7 @@ fn send_mpv_command(socket_path: &str, command: serde_json::Value) -> Result<(),
             .open(socket_path)
             .map_err(|e| e.to_string())?;
         file.write_all(payload.as_bytes()).map_err(|e| e.to_string())?;
+        let _ = file.flush();
     }
 
     Ok(())
@@ -40,6 +42,14 @@ pub fn set_mpv_pause(socket_path: String, pause: bool) -> Result<(), String> {
 pub fn set_mpv_time(socket_path: String, seconds: f64) -> Result<(), String> {
     let cmd = serde_json::json!({
         "command": ["seek", seconds, "absolute"]
+    });
+    send_mpv_command(&socket_path, cmd)
+}
+
+#[tauri::command]
+pub fn set_mpv_playlist_pos(socket_path: String, pos: u64) -> Result<(), String> {
+    let cmd = serde_json::json!({
+        "command": ["set_property", "playlist-pos", pos]
     });
     send_mpv_command(&socket_path, cmd)
 }
@@ -93,9 +103,11 @@ pub fn start_mpv_monitor(window: tauri::Window, socket_path: String) {
     std::thread::spawn(move || {
         let mut last_time = 0.0;
         let mut last_pause = false;
+        let mut last_playlist_pos: u64 = 0;
 
         let query_time_cmd = serde_json::json!({"command": ["get_property", "time-pos"]});
         let query_pause_cmd = serde_json::json!({"command": ["get_property", "pause"]});
+        let query_playlist_cmd = serde_json::json!({"command": ["get_property", "playlist-pos"]});
 
         println!("[Rust Monitor]: Начинаем проверку сокета: {}", socket_path);
 
@@ -123,16 +135,17 @@ pub fn start_mpv_monitor(window: tauri::Window, socket_path: String) {
         loop {
             let time_res = query_mpv(&socket_path, query_time_cmd.clone());
             let pause_res = query_mpv(&socket_path, query_pause_cmd.clone());
+            let playlist_res = query_mpv(&socket_path, query_playlist_cmd.clone());
 
-            if time_res.is_err() || pause_res.is_err() {
+            if time_res.is_err() || pause_res.is_err() || playlist_res.is_err() {
                 error_count += 1;
                 
-                if error_count >= 8 {
-                    println!("[Rust Monitor]: Плеер действительно закрылся (8 ошибок подряд). Стоп мониторинг.");
+                if error_count >= 15 {
+                    println!("[Rust Monitor]: Плеер закрылся.");
                     break;
                 }
 
-                std::thread::sleep(Duration::from_millis(500));
+                std::thread::sleep(Duration::from_millis(400));
                 continue;
             }
 
@@ -148,19 +161,25 @@ pub fn start_mpv_monitor(window: tauri::Window, socket_path: String) {
                 .map(|v| v["data"].as_bool().unwrap_or(false))
                 .unwrap_or(false);
 
+            let playlist_str = playlist_res.unwrap();
+            let current_playlist_pos: u64 = serde_json::from_str::<serde_json::Value>(&playlist_str)
+                .map(|v| v["data"].as_u64().unwrap_or(0))
+                .unwrap_or(0);
+
             let is_playing = !current_pause;
             let time_diff = (current_time - last_time).abs();
             
             let pause_changed = current_pause != last_pause;
-            
             let user_seeked = is_playing && !pause_changed && time_diff > 4.0;
+            let playlist_changed = current_playlist_pos != last_playlist_pos;
             
-            if pause_changed || user_seeked {
-                println!("[Rust Monitor] Валидное действие! Playing: {}, Time: {}", is_playing, current_time);
+            if pause_changed || user_seeked || playlist_changed {
+                println!("[Rust Monitor] Валидное действие! Playing: {}, Time: {}, Playlist Pos: {}", is_playing, current_time, current_playlist_pos);
                 
                 let payload = serde_json::json!({
                     "isPlaying": is_playing,
-                    "currentTime": current_time
+                    "currentTime": current_time,
+                    "playlistPosition": current_playlist_pos
                 });
                 
                 let _ = window.emit("mpv_state_changed", payload);
@@ -168,6 +187,7 @@ pub fn start_mpv_monitor(window: tauri::Window, socket_path: String) {
             }
 
             last_time = current_time; 
+            last_playlist_pos = current_playlist_pos;
             std::thread::sleep(Duration::from_millis(500));
         }
     });

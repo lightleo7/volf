@@ -34,6 +34,16 @@ class MpvIpcService {
       console.error("[MPV IPC Error] Ошибка перемотки:", error);
     }
   }
+  
+  async setPlaylistPos(socketSuffix: string, pos: number): Promise<void> {
+    try {
+      const path = this.getSocketPath(socketSuffix);
+      await invoke("set_mpv_playlist_pos", { socketPath: path, pos });
+      console.log(`[MPV IPC] Серия в плейлисте: ${pos} (сокет: ${path})`);
+    } catch (error) {
+      console.error("[MPV IPC Error] Ошибка серии плейлиста:", error);
+    }
+  }
 }
 
 export const mpvIpcService = new MpvIpcService();

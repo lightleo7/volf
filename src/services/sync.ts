@@ -4,6 +4,7 @@ export interface VideoState {
     url: string;
     currentTime: number;
     isPlaying: boolean;
+    playlistPosition: number;
 }
 
 class SyncService {
@@ -11,6 +12,8 @@ class SyncService {
     private currentUrl: string | null = null;
     public roomCode: string | null = null;
     public ownerToken: string | null = null;
+
+    private onSyncCallback: ((command: Partial<VideoState>) => void) | null = null;
 
     connect(serverUrl: string = "http://localhost:3000") {
         if (this.socket && this.currentUrl === serverUrl && this.socket.connected) {
@@ -30,6 +33,12 @@ class SyncService {
 
         this.socket.on("connect", () => {
             console.log(`[Sync] Успешно подключено к серверу: ${serverUrl} (ID: ${this.socket?.id})`);
+        });
+
+        this.socket.on("sync_player", (command: any) => {
+            if (this.onSyncCallback) {
+                this.onSyncCallback(command);
+            }
         });
     }
 
@@ -72,15 +81,13 @@ class SyncService {
         }
         this.socket.emit("player_command", command);
     }
-
+    
     onSyncPlayer(callback: (command: Partial<VideoState>) => void) {
-        if (!this.socket) return;
-        this.socket.off("sync_player");
-        this.socket.on("sync_player", callback);
+        this.onSyncCallback = callback;
     }
 
     offSyncPlayer() {
-        this.socket?.off("sync_player");
+        this.onSyncCallback = null;
     }
 
     getSocketId(): string {

@@ -61,7 +61,10 @@ export function useMpvSync(mpvArgs: string) {
       ];
 
       await invoke("launch_mpv", { url: videoUrl.trim(), args: finalArgs });
-      await invoke("start_mpv_monitor", { socketPath });
+      
+      setTimeout(async () => {
+        await invoke("start_mpv_monitor", { socketPath });
+      }, 400);
     } catch (err) {
       alert("Не удалось запустить MPV или монитор: " + err);
     }
@@ -72,7 +75,8 @@ export function useMpvSync(mpvArgs: string) {
     syncService.sendCommand({
       url: videoUrl.trim(),
       isPlaying: true,
-      currentTime: 0
+      currentTime: 0,
+      playlistPosition: 0
     });
   };
 
@@ -92,11 +96,14 @@ export function useMpvSync(mpvArgs: string) {
       if (command.currentTime !== undefined) {
         await mpvIpcService.seekTo(myUniqueSuffix, command.currentTime);
       }
+      if (command.playlistPosition !== undefined) {
+        await mpvIpcService.setPlaylistPos(myUniqueSuffix, command.playlistPosition);
+      }
     });
 
     const unlistenPromise = listen("mpv_state_changed", (event: any) => {
-      const { isPlaying, currentTime } = event.payload;
-      syncService.sendCommand({ isPlaying, currentTime });
+      const { isPlaying, currentTime, playlistPosition } = event.payload;
+      syncService.sendCommand({ isPlaying, currentTime, playlistPosition });
     });
 
     return () => {

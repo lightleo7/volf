@@ -22,7 +22,8 @@ pub fn run() {
             launch_mpv,
             mpv_ipc::start_mpv_monitor,
             mpv_ipc::set_mpv_pause,
-            mpv_ipc::set_mpv_time
+            mpv_ipc::set_mpv_time,
+            mpv_ipc::set_mpv_playlist_pos
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
