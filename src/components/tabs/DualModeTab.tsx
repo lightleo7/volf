@@ -55,7 +55,7 @@ export function DualModeTab({
       </div>
 
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-3 bg-white/[0.01] border border-white/[0.04] p-5 rounded-2xl backdrop-blur-sm">
+        {!currentRoom && (<div className="flex flex-col gap-3 bg-white/[0.01] border border-white/[0.04] p-5 rounded-2xl backdrop-blur-sm">
           <label className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2">
             <Server className="w-4 h-4 text-purple-400" /> Хостинг-Сервер синхронизации
           </label>
@@ -69,7 +69,7 @@ export function DualModeTab({
               className="w-full bg-black/40 border-white/[0.06] text-purple-300 placeholder:text-slate-700 h-11 font-mono text-sm rounded-xl px-4"
             />
           </div>
-        </div>
+        </div>)}
 
         {!currentRoom ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
