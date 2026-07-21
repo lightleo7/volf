@@ -61,6 +61,8 @@ export default function App() {
               inputCode={sync.inputCode}
               videoUrl={sync.videoUrl}
               isConnecting={sync.isConnecting}
+              messages={sync.messages}
+              onSendMessage={sync.handleSendMessage} 
               setInputCode={sync.setInputCode}
               setVideoUrl={sync.setVideoUrl}
               onServerUrlChange={sync.handleServerUrlChange}

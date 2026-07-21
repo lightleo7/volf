@@ -21,7 +21,7 @@ export function HistoryTab({ onPlay, onShare }: HistoryTabProps) {
   }, []);
 
   return (
-    <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
+    <div className="max-w-7xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
           <History className="w-8 h-8 text-violet-400" /> ИСТОРИЯ ПРОСМОТРОВ

@@ -34,7 +34,7 @@ export function SearchTab({ onPlay, onShare }: SearchTabProps) {
   };
 
   return (
-    <div className="flex flex-col gap-8 max-w-5xl w-full mx-auto animate-fade-in">
+    <div className="flex flex-col gap-8 max-w-7xl w-full mx-auto animate-fade-in">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
           <Tv className="w-8 h-8 text-emerald-400 animate-pulse" /> ПОИСК ВИДЕО

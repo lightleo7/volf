@@ -3,6 +3,7 @@ import { syncService } from "@/services/sync";
 import { mpvIpcService } from "@/services/mpv";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { Message } from "@/types";
 
 export function useMpvSync(mpvArgs: string) {
   const [serverUrl, setServerUrl] = useState(() => {
@@ -12,6 +13,8 @@ export function useMpvSync(mpvArgs: string) {
   const [inputCode, setInputCode] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
+
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const handleServerUrlChange = (newUrl: string) => {
     setServerUrl(newUrl);
@@ -25,6 +28,7 @@ export function useMpvSync(mpvArgs: string) {
       syncService.connect(serverUrl);
       const res = await syncService.createRoom();
       setCurrentRoom(res.roomCode);
+      setMessages([]);
     } catch (err) {
       alert("Ошибка создания комнаты: " + err);
     } finally {
@@ -41,6 +45,7 @@ export function useMpvSync(mpvArgs: string) {
       if (res.videoState && res.videoState.url) {
         setVideoUrl(res.videoState.url);
       }
+      setMessages([]);
     } catch (err) {
       alert("Не удалось войти в комнату: " + err);
     } finally {
@@ -61,7 +66,7 @@ export function useMpvSync(mpvArgs: string) {
       ];
 
       await invoke("launch_mpv", { url: videoUrl.trim(), args: finalArgs });
-      
+
       setTimeout(async () => {
         await invoke("start_mpv_monitor", { socketPath });
       }, 400);
@@ -78,6 +83,24 @@ export function useMpvSync(mpvArgs: string) {
       currentTime: 0,
       playlistPosition: 0
     });
+  };
+
+  const handleSendMessage = (text: string) => {
+    if (!text.trim()) return;
+
+    const myId = syncService.getSocketId() || "Я";
+    const shortId = myId.substring(0, 5);
+
+    const newMessage: Message = {
+      id: crypto.randomUUID(),
+      sender: `User_${shortId}`,
+      text: text.trim(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages((prev) => [...prev, newMessage]);
+
+    syncService.sendChatMessage(newMessage);
   };
 
   const leaveRoom = () => {
@@ -112,12 +135,35 @@ export function useMpvSync(mpvArgs: string) {
     };
   }, [mpvArgs]);
 
+
+  useEffect(() => {
+    if (!syncService.socket) return;
+
+    const handleIncomingMessage = (message: Message) => {
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === message.id)) return prev;
+        return [...prev, message];
+      });
+    };
+
+    syncService.socket.on("chat_message", handleIncomingMessage);
+
+    return () => {
+      if (syncService.socket) {
+        syncService.socket.off("chat_message", handleIncomingMessage);
+      }
+    };
+  }, [currentRoom]);
+
+
   return {
     serverUrl,
     currentRoom,
     inputCode,
     videoUrl,
     isConnecting,
+    messages,
+    handleSendMessage,
     setInputCode,
     setVideoUrl,
     handleServerUrlChange,

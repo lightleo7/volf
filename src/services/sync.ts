@@ -1,4 +1,5 @@
 import { io, Socket } from "socket.io-client";
+import { Message } from "@/types";
 
 export interface VideoState {
     url: string;
@@ -8,8 +9,8 @@ export interface VideoState {
 }
 
 class SyncService {
-    private socket: Socket | null = null;
     private currentUrl: string | null = null;
+    public socket: Socket | null = null;
     public roomCode: string | null = null;
     public ownerToken: string | null = null;
 
@@ -81,7 +82,16 @@ class SyncService {
         }
         this.socket.emit("player_command", command);
     }
-    
+
+    sendChatMessage(message: Message): void {
+        if (!this.socket || !this.socket.connected) {
+            console.warn("Не удалось отправить сообщение: сокет не подключен.");
+            return;
+        }
+
+        this.socket.emit("chat_message", message);
+    }
+
     onSyncPlayer(callback: (command: Partial<VideoState>) => void) {
         this.onSyncCallback = callback;
     }

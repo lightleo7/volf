@@ -11,3 +11,10 @@ export interface VideoItem {
   isPlaylist: boolean; 
   videoCount?: number;
 }
+
+export interface Message {
+  id: string;
+  sender: string;
+  text: string;
+  time: string;
+}

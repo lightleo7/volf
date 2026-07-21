@@ -28,7 +28,7 @@ export function SettingsTab({
   onReset
 }: SettingsTabProps) {
   return (
-    <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
+    <div className="max-w-7xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.06] pb-6 gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(45,212,191,0.3)]">

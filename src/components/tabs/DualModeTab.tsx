@@ -1,6 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, Server, LogOut, Copy, Play, ArrowRight } from "lucide-react";
+import { useRef, useEffect } from "react";
+
+interface Message {
+  id: string;
+  sender: string;
+  text: string;
+  time: string;
+}
 
 interface DualModeTabProps {
   serverUrl: string;
@@ -16,6 +24,8 @@ interface DualModeTabProps {
   onLaunchMpv: () => void;
   onSendVideo: () => void;
   onLeaveRoom: () => void;
+  messages?: Message[];
+  onSendMessage?: (text: string) => void;
 }
 
 export function DualModeTab({
@@ -32,9 +42,17 @@ export function DualModeTab({
   onLaunchMpv,
   onSendVideo,
   onLeaveRoom,
+  messages = [],
+  onSendMessage,
 }: DualModeTabProps) {
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
-    <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
+    <div className="max-w-7xl w-full mx-auto flex flex-col gap-8 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.06] pb-6 gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 flex items-center gap-3 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
@@ -113,70 +131,130 @@ export function DualModeTab({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-6 w-full animate-fade-in">
-            <div className="bg-gradient-to-r from-purple-950/20 via-black/40 to-indigo-950/20 border border-purple-500/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl backdrop-blur-md">
-              <div className="text-left flex flex-col gap-1.5">
-                <div className="flex items-center gap-2 text-[10px] font-extrabold text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 rounded-full px-3 py-1 w-fit select-none shadow-[0_0_15px_rgba(52,211,153,0.15)] animate-pulse">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  ПОДКЛЮЧЕНО К СЕССИИ
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full lg:h-[450px] animate-fade-in">
+
+            <div className="lg:col-span-2 flex flex-col gap-6 h-full justify-between">
+
+              <div className="bg-gradient-to-r from-purple-950/20 via-black/40 to-indigo-950/20 border border-purple-500/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl backdrop-blur-md">
+                <div className="text-left flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2 text-[10px] font-extrabold text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 rounded-full px-3 py-1 w-fit select-none shadow-[0_0_15px_rgba(52,211,153,0.15)] animate-pulse">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    ПОДКЛЮЧЕНО К СЕССИИ
+                  </div>
+                  <p className="text-xs text-slate-400 font-medium">Кликните на код справа, чтобы скопировать ключ друзьям.</p>
                 </div>
-                <p className="text-xs text-slate-400 font-medium">Кликните на код справа, чтобы скопировать ключ друзьям.</p>
+
+                <div
+                  onClick={() => navigator.clipboard.writeText(currentRoom || "")}
+                  className="text-3xl font-black text-purple-300 tracking-widest select-all font-mono bg-purple-950/20 hover:bg-purple-950/40 border border-purple-500/30 hover:border-purple-400/60 rounded-xl py-3 px-8 cursor-pointer flex items-center gap-4 transition-all duration-300 group shadow-[0_0_25px_rgba(168,85,247,0.15)] hover:shadow-[0_0_35px_rgba(168,85,247,0.3)] hover:scale-105 active:scale-95"
+                >
+                  {currentRoom}
+                  <Copy className="w-5 h-5 text-slate-500 group-hover:text-purple-400 transition-colors" />
+                </div>
               </div>
 
-              <div
-                onClick={() => navigator.clipboard.writeText(currentRoom)}
-                className="text-3xl font-black text-purple-300 tracking-widest select-all font-mono bg-purple-950/20 hover:bg-purple-950/40 border border-purple-500/30 hover:border-purple-400/60 rounded-xl py-3 px-8 cursor-pointer flex items-center gap-4 transition-all duration-300 group shadow-[0_0_25px_rgba(168,85,247,0.15)] hover:shadow-[0_0_35px_rgba(168,85,247,0.3)] hover:scale-105 active:scale-95"
+              <div className="flex flex-col gap-4 bg-white/[0.01] border border-white/[0.05] rounded-2xl p-6 shadow-xl flex-1 justify-center">
+                <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
+                  Транслировать медиапоток
+                </label>
+
+                <div className="flex flex-col xl:flex-row gap-4">
+                  <Input
+                    type="text"
+                    placeholder="Вставьте ссылку на видео"
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    className="flex-1 bg-black/40 border-white/[0.06] text-purple-300 placeholder:text-slate-700 focus-visible:ring-purple-500 focus-visible:border-purple-500/40 h-11 text-sm font-mono rounded-xl px-4 transition-all"
+                  />
+
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <Button
+                      onClick={onLaunchMpv}
+                      disabled={!videoUrl.trim()}
+                      variant="outline"
+                      className="border-white/[0.06] bg-white/[0.02] text-slate-200 hover:bg-white/[0.06] hover:text-white flex items-center gap-2 h-11 px-5 rounded-xl transition-all"
+                    >
+                      <Play className="w-4 h-4 text-purple-400 fill-purple-400" />
+                      Запустить MPV
+                    </Button>
+
+                    <Button
+                      onClick={onSendVideo}
+                      disabled={!videoUrl.trim()}
+                      className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold flex items-center gap-2 cursor-pointer h-11 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]"
+                    >
+                      Синхронизировать
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="text-xs text-slate-500 leading-relaxed bg-white/[0.01] border border-white/[0.02] p-4 rounded-xl mt-2">
+                  <span className="text-purple-400 font-bold">1 шаг:</span> Вставьте ссылку и нажмите <span className="text-slate-300 font-semibold">«Синхронизировать»</span>. <br />
+                  <span className="text-purple-400 font-bold">2 шаг:</span> Нажмите <span className="text-slate-300 font-semibold">«Запустить MPV»</span> для старта просмотра
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col bg-white/[0.01] border border-white/[0.05] rounded-2xl h-[400px] lg:h-full shadow-xl overflow-hidden">
+
+              <div className="p-4 border-b border-white/[0.06] bg-black/20 flex items-center gap-2 flex-shrink-0">
+                <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.7)]" />
+                <span className="text-xs font-bold text-slate-300 tracking-wider uppercase">Чат комнаты</span>
+              </div>
+
+              <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 scrollbar-thin scrollbar-thumb-white/[0.05]">
+                {messages && messages.length > 0 ? (
+                  messages.map((msg) => (
+                    <div key={msg.id} className="flex flex-col gap-0.5 max-w-[90%] bg-white/[0.02] border border-white/[0.02] rounded-xl p-2.5 flex-shrink-0">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-xs font-bold text-purple-300 truncate">{msg.sender}</span>
+                        <span className="text-[10px] text-slate-600 font-mono">{msg.time}</span>
+                      </div>
+                      <p className="text-xs text-slate-300 break-words mt-0.5 leading-relaxed">{msg.text}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex-1 flex items-center justify-center text-center p-4">
+                    <p className="text-xs text-slate-600 tracking-wide">В чате пока нет сообщений.<br />Напишите что-нибудь первым!</p>
+                  </div>
+                )}
+                <div ref={chatEndRef} />
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.currentTarget;
+                  const input = form.elements.namedItem('chatMessage') as HTMLInputElement;
+                  if (input.value.trim() && onSendMessage) {
+                    onSendMessage(input.value.trim());
+                    input.value = '';
+                  }
+                }}
+                className="p-3 border-t border-white/[0.06] bg-black/40 flex items-center gap-2 flex-shrink-0"
               >
-                {currentRoom}
-                <Copy className="w-5 h-5 text-slate-500 group-hover:text-purple-400 transition-colors" />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4 bg-white/[0.01] border border-white/[0.05] rounded-2xl p-6 shadow-xl">
-              <label className="text-sm font-semibold text-slate-300 tracking-wide uppercase">
-                Транслировать медиапоток
-              </label>
-
-              <div className="flex flex-col lg:flex-row gap-4">
                 <Input
+                  name="chatMessage"
                   type="text"
-                  placeholder="Вставьте ссылку на Rutube/YouTube"
-                  value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
-                  className="flex-1 bg-black/40 border-white/[0.06] text-purple-300 placeholder:text-slate-700 focus-visible:ring-purple-500 focus-visible:border-purple-500/40 h-11 text-sm font-mono rounded-xl px-4 transition-all"
+                  placeholder="Сообщение..."
+                  autoComplete="off"
+                  className="flex-1 bg-black/40 border-white/[0.06] text-slate-200 placeholder:text-slate-700 focus-visible:ring-purple-500 focus-visible:border-purple-500/40 h-9 text-xs rounded-xl px-3 transition-all"
                 />
-
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <Button
-                    onClick={onLaunchMpv}
-                    disabled={!videoUrl.trim()}
-                    variant="outline"
-                    className="border-white/[0.06] bg-white/[0.02] text-slate-200 hover:bg-white/[0.06] hover:text-white flex items-center gap-2 h-11 px-5 rounded-xl transition-all"
-                    title="Запустить локальный MPV"
-                  >
-                    <Play className="w-4 h-4 text-purple-400 fill-purple-400" />
-                    Запустить MPV
-                  </Button>
-
-                  <Button
-                    onClick={onSendVideo}
-                    disabled={!videoUrl.trim()}
-                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold flex items-center gap-2 cursor-pointer h-11 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]"
-                  >
-                    Синхронизировать
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="text-xs text-slate-500 leading-relaxed bg-white/[0.01] border border-white/[0.02] p-4 rounded-xl mt-2">
-                <span className="text-purple-400 font-bold">1 шаг:</span> Вставьте линк и зажмите <span className="text-slate-300 font-semibold">«Синхронизировать»</span>, чтобы отправить медиасессию всем подключившимся. <br />
-                <span className="text-purple-400 font-bold">2 шаг:</span> Нажмите <span className="text-slate-300 font-semibold">«Запустить MPV»</span>, чтобы открыть ваш локальный плеер и начать совместный сеанс!
-              </div>
+                <Button
+                  type="submit"
+                  className="bg-purple-600 hover:bg-purple-500 text-white h-9 px-4 rounded-xl text-xs font-bold transition-all shadow-[0_0_10px_rgba(168,85,247,0.2)]"
+                >
+                  Отправить
+                </Button>
+              </form>
             </div>
+
           </div>
+
+
         )}
       </div>
-    </div>
+    </div >
   );
 }
