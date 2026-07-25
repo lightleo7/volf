@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Server, LogOut, Copy, Play, ArrowRight } from "lucide-react";
+import { Users, Server, LogOut, Copy, Play, ArrowRight, User } from "lucide-react";
 import { useRef, useEffect } from "react";
 
 interface Message {
@@ -16,6 +16,8 @@ interface DualModeTabProps {
   inputCode: string;
   videoUrl: string;
   isConnecting: boolean;
+  nickname: string;
+  onNicknameChange: (val: string) => void;
   setInputCode: (val: string) => void;
   setVideoUrl: (val: string) => void;
   onServerUrlChange: (url: string) => void;
@@ -34,6 +36,8 @@ export function DualModeTab({
   inputCode,
   videoUrl,
   isConnecting,
+  nickname,
+  onNicknameChange,
   setInputCode,
   setVideoUrl,
   onServerUrlChange,
@@ -83,6 +87,22 @@ export function DualModeTab({
               placeholder="http://localhost:3000"
               value={serverUrl}
               onChange={(e) => onServerUrlChange(e.target.value)}
+              disabled={!!currentRoom || isConnecting}
+              className="w-full bg-black/40 border-white/[0.06] text-purple-300 placeholder:text-slate-700 h-11 font-mono text-sm rounded-xl px-4"
+            />
+          </div>
+        </div>)}
+        
+        {!currentRoom && (<div className="flex flex-col gap-3 bg-white/[0.01] border border-white/[0.04] p-5 rounded-2xl backdrop-blur-sm">
+          <label className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2">
+            <User className="w-4 h-4 text-purple-400" /> Имя пользователя
+          </label>
+          <div className="flex items-center gap-3">
+            <Input
+              type="text"
+              placeholder="nickname123"
+              value={nickname}
+              onChange={(e) => onNicknameChange(e.target.value)}
               disabled={!!currentRoom || isConnecting}
               className="w-full bg-black/40 border-white/[0.06] text-purple-300 placeholder:text-slate-700 h-11 font-mono text-sm rounded-xl px-4"
             />

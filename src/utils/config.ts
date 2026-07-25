@@ -9,7 +9,7 @@ export interface SettingsData {
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
-  mpvArgs: ""
+  mpvArgs: "--force-window=immediate --hwdec=auto-safe --ytdl-raw-options-append=force-ipv4="
 };
 
 

@@ -9,6 +9,9 @@ export function useMpvSync(mpvArgs: string) {
   const [serverUrl, setServerUrl] = useState(() => {
     return localStorage.getItem("custom_sync_server") || "http://localhost:3000";
   });
+  const [nickname, setNickname] = useState(() => {
+    return localStorage.getItem("custom_nickname") || "";
+  });
   const [currentRoom, setCurrentRoom] = useState<string | null>(null);
   const [inputCode, setInputCode] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
@@ -20,6 +23,11 @@ export function useMpvSync(mpvArgs: string) {
     setServerUrl(newUrl);
     localStorage.setItem("custom_sync_server", newUrl);
     syncService.connect(newUrl);
+  };
+
+  const handleNicknameChange = (newNickname: string) => {
+    setNickname(newNickname);
+    localStorage.setItem("custom_nickname", newNickname);
   };
 
   const handleCreateRoom = async () => {
@@ -88,12 +96,12 @@ export function useMpvSync(mpvArgs: string) {
   const handleSendMessage = (text: string) => {
     if (!text.trim()) return;
 
-    const myId = syncService.getSocketId() || "Я";
+    const myId = syncService.getSocketId() || "i";
     const shortId = myId.substring(0, 5);
 
     const newMessage: Message = {
       id: crypto.randomUUID(),
-      sender: `User_${shortId}`,
+      sender: nickname.trim() || `User_${shortId}`,
       text: text.trim(),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
@@ -162,6 +170,8 @@ export function useMpvSync(mpvArgs: string) {
     inputCode,
     videoUrl,
     isConnecting,
+    nickname,
+    handleNicknameChange,
     messages,
     handleSendMessage,
     setInputCode,
