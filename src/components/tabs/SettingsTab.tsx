@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RotateCcw, Save, Loader2, Settings } from "lucide-react";
-import { MpvArgsCheckboxes } from "@/components/mpvArgs"; // Импортируем новый компонент
+import { MpvArgsCheckboxes } from "@/components/mpvArgs";
 
 interface SettingsTabProps {
   mpvArgs: string;
